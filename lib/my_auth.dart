@@ -15,7 +15,7 @@ class MyAuth
   CollectionReference users = FirebaseFirestore.instance.collection("users");
   String uid="", access="";
 
-  MyUsers myuser=MyUsers("", "", "", "", "", "", "");
+  MyUsers myuser=MyUsers("", "", "", "", "", "", "", "");
 
   factory MyAuth()
   {
@@ -62,6 +62,7 @@ class MyAuth
         'access' : 'Member',
         'manager' : 'None',
         'name' : name,
+        'company' : 'None'
       });
       await getUser();
       return true;
@@ -127,7 +128,7 @@ class MyAuth
     {
       access = querySnapshot.docs.first["access"];
       uid = querySnapshot.docs.first["id"];
-      myuser = MyUsers(querySnapshot.docs.first["id"], querySnapshot.docs.first["name"], querySnapshot.docs.first["email"], querySnapshot.docs.first["password"], querySnapshot.docs.first["access"], querySnapshot.docs.first["manager"], querySnapshot.docs.first.id);
+      myuser = MyUsers(querySnapshot.docs.first["id"], querySnapshot.docs.first["name"], querySnapshot.docs.first["email"], querySnapshot.docs.first["password"], querySnapshot.docs.first["access"], querySnapshot.docs.first["manager"], querySnapshot.docs.first.id, querySnapshot.docs.first["company"]);
     }
     );
   }

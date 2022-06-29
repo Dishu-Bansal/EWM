@@ -22,8 +22,8 @@ class _share_withState extends State<share_with> {
 
   List<MyUsers> employees = List.empty(growable: true);
   _getEmployees() async {
-    List<MyUsers> members = await getUsers("access", "Member");
-    List<MyUsers> operators = await getUsers("access", "Operator");
+    List<MyUsers> members = await getUsers("access", "Member", "");
+    List<MyUsers> operators = await getUsers("access", "Operator", "");
     employees.addAll(members);
     employees.addAll(operators);
     // await FirebaseFirestore.instance.collection("users").where('access', isEqualTo: "Member").get()

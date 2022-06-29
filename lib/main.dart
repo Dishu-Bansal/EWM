@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
   }
@@ -50,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, false, false),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
@@ -92,9 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
-          createButton(Icons.email, "Admin", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Admin")));}, MediaQuery.of(context).size.height),
-          createButton(Icons.email, "Operator", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Operator")));}, MediaQuery.of(context).size.height),
-          createButton(Icons.email, "Member", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Member")));}, MediaQuery.of(context).size.height),
+          createButton(Icons.person, "Admin", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Admin")));}, MediaQuery.of(context).size.height),
+          createButton(Icons.supervisor_account, "Operator", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Operator")));}, MediaQuery.of(context).size.height),
+          createButton(Icons.groups, "Member", () {Navigator.of(context).push(MaterialPageRoute(builder: (_) => Login("Member")));}, MediaQuery.of(context).size.height),
         ],
       ),
     );

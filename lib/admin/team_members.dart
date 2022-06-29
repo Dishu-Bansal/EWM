@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ewm/member/member_home.dart';
+import 'package:ewm/my_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../member/my_tickets.dart';
@@ -20,7 +21,7 @@ class _MembersState extends State<Members> {
   bool loading  = true;
   List<MyUsers> members = List.empty(growable: true);
   getMembers () async {
-    members = await getUsers("access", "Member");
+    members = await getUsers("access", "Member", MyAuth().myuser.name);
     setState(() {
       loading = false;
     });
@@ -34,7 +35,7 @@ class _MembersState extends State<Members> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: loading ? Center(child: CircularProgressIndicator(),) : Row(
         children: [
           Expanded(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ewm/my_users.dart';
 import 'package:ewm/util.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -65,7 +66,7 @@ class _TicketState extends State<Ticket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: loading ? Center(child: CircularProgressIndicator(),) : Row(
         children: [
           Expanded(child: Column(
@@ -77,6 +78,15 @@ class _TicketState extends State<Ticket> {
                 child: Image.file(file!, fit: BoxFit.fill,),
               ),
               Text(DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(widget.ticket.start)) + " - " + DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(widget.ticket.end))),
+              MaterialButton(
+                onPressed: () async {
+                  await FirebaseFirestore.instance.collection("tickets").doc(widget.ticket.id).delete();
+                  await FirebaseStorage.instance.ref(widget.ticket.owner).child(widget.ticket.id).delete();
+                  Navigator.pop(context);
+                },
+                color: Colors.red,
+                child: Icon(Icons.delete, color: Colors.black,),
+              ),
             ],
           ))
         ],

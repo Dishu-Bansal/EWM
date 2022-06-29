@@ -19,7 +19,8 @@ List<CameraDescription> cameras = List.empty(growable: true);
 
 class picture extends StatefulWidget {
   Tickets? current;
-  picture(Tickets? this.current, {Key? key}) : super(key: key);
+  MyUsers currentuser;
+  picture(Tickets? this.current, MyUsers this.currentuser, {Key? key}) : super(key: key);
 
   @override
   _pictureState createState()
@@ -173,7 +174,7 @@ class _pictureState extends State<picture> {
             //     );
             //   },
             // );
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => TicketDetails(image, widget.current)));
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => TicketDetails(image, widget.current, widget.currentuser)));
           } catch (e) {
             // If an error occurs, log the error to the console.
             print(e);

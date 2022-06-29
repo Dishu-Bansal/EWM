@@ -7,6 +7,7 @@ import 'package:ewm/my_auth.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../my_users.dart';
 import '../util.dart';
@@ -49,11 +50,11 @@ class _UploadState extends State<Upload> {
     await FirebaseFirestore.instance.collection("files").where("shared_by", isEqualTo: MyAuth().uid).get().then((value)
     {
       value.docs.forEach((e) {
-        history.add(MyFiles(e["id"], e["name"], e["shared_by"], e["shared_with"], e["time"], e["sharer"]));
+        history.add(MyFiles(e.id, e["name"], e["shared_by"], e["shared_with"], e["time"], e["sharer"], e["seen"]));
       });
     });
     setState(() {
-      loading = true;
+      loading = false;
     });
   }
 
@@ -66,7 +67,7 @@ class _UploadState extends State<Upload> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: Row(
         children: [
           Expanded(
@@ -103,13 +104,12 @@ class _UploadState extends State<Upload> {
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: DefaultTabController(
-                        length: 2,
+                        length: 1,
                         child: Column(
                           children: [
                             TabBar(
                               indicatorColor: Colors.black,
                               tabs: [
-                                Tab(child: Text("Queue", style: TextStyle(color: Colors.black),),),
                                 Tab(child: Text("History", style: TextStyle(color: Colors.black),),),
                               ],
                             ),
@@ -117,22 +117,19 @@ class _UploadState extends State<Upload> {
                               height: MediaQuery.of(context).size.height - 300,
                               child: TabBarView(
                                 children: [
-                                  ListView.builder(
-                                    itemCount: 10,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text("File", style: TextStyle(fontSize: 20),),
-                                      );
-                                    },
-                                  ),
                                   loading? Center(child: CircularProgressIndicator(),) : ListView.builder(
                                     itemCount: history.length,
                                     itemBuilder: (context, index) {
                                       MyFiles current = history.elementAt(index);
                                       return Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Text(current.name, style: TextStyle(fontSize: 20),),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(fit: FlexFit.loose,child: Text(current.name, style: TextStyle(fontSize: 18),overflow: TextOverflow.fade,)),
+                                            Text(DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(current.time))),
+                                          ],
+                                        ),
                                       );
                                     },
                                   ),

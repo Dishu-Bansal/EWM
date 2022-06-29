@@ -22,7 +22,7 @@ class Login extends StatelessWidget {
     access = acces;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, false),
       body: Center(
         child: SingleChildScrollView(
           child: Column(

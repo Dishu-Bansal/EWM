@@ -15,8 +15,8 @@ import 'my_users.dart';
 class TicketDetails extends StatefulWidget {
   XFile image;
   Tickets? current;
-
-  TicketDetails(XFile this.image, Tickets? this.current, {Key? key}) : super(key: key);
+  MyUsers currentuser;
+  TicketDetails(XFile this.image, Tickets? this.current, MyUsers this.currentuser, {Key? key}) : super(key: key);
 
   @override
   State<TicketDetails> createState() => _TicketDetailsState();
@@ -25,7 +25,25 @@ class TicketDetails extends StatefulWidget {
 class _TicketDetailsState extends State<TicketDetails> {
 
   String name=""; String? type = null;
-  List<String> tickettypes = ["Ticket 1", "Ticket 2", "Ticket 3", "Other"];
+  List<String> tickettypes = ["Bear Awareness",
+    "Coiled Tubing Well Servicing Blowout Prevention",
+    "Common Safety Orientation (CSO)",
+    "Detection and Control of Flammable Substances",
+    "Emergency First Aid - Level A CPR",
+    "Fall Protection for Rig Work",
+    "Fall Rescue for Rig Work",
+    "H2S Alive",
+    "Hazard Management",
+    "Incident and Accident Investigation",
+    "Safety Management and Regulatory Awareness for Wellsite Supervision (SARA)",
+      "Second Line Supervisor's Well Control (Test Well)",
+    "Second Line Supervisor's Well Control Refresher",
+    "Standard First Aid - Level A CPR",
+    "Supervisor Leadership for Health and Safety in the Workplace",
+    "Transportation of Dangerous Goods",
+    "Well Service Blowout Prevention",
+    "Wildlife Awareness",
+    "Workplace Hazardous Materials Information System (WHMIS)", "Other"];
   int start=0, end=0;
 
   TextEditingController _controller1 = TextEditingController();
@@ -48,7 +66,7 @@ class _TicketDetailsState extends State<TicketDetails> {
           }
       }
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true, ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -92,7 +110,6 @@ class _TicketDetailsState extends State<TicketDetails> {
             onTap: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
-                  minTime: DateTime.now(),
                   onConfirm: (date) {
                     start = date.millisecondsSinceEpoch;
                     _controller1.text = DateFormat("yyyy/MM/dd").format(date);
@@ -101,13 +118,13 @@ class _TicketDetailsState extends State<TicketDetails> {
           ),
           TextField(
             decoration: InputDecoration(
-                hintText: "Expiry Date"
+                hintText: "Expiry Date",
+                helperText: "If there is no expiry, leave blank"
             ),
             controller: _controller2,
             onTap: () {
               DatePicker.showDatePicker(context,
                   showTitleActions: true,
-                  minTime: DateTime.now(),
                   onConfirm: (date) {
                     end = date.millisecondsSinceEpoch;
                     _controller2.text = DateFormat("yyyy/MM/dd").format(date);
@@ -127,12 +144,12 @@ class _TicketDetailsState extends State<TicketDetails> {
                         'name': type == "Other" ? name : type,
                         'issue': start,
                         'expiry': end,
-                        'owner': MyAuth().uid,
+                        'owner': widget.currentuser.uid,
                       });
                       final userref = storaferef.child(MyAuth().uid);
                       final fileref = userref.child(ref.id);
                       await fileref.putFile(File(widget.image.path));
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => member_home(MyAuth().myuser)));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => member_home(widget.currentuser)));
                     } on FirebaseException catch (e) {
                       print("Uploading Error");
                       showToast(e.message ?? "Unknown Error");
@@ -147,12 +164,12 @@ class _TicketDetailsState extends State<TicketDetails> {
                         'name': type == "Other" ? name : type,
                         'issue': start,
                         'expiry': end,
-                        'owner': MyAuth().uid,
+                        'owner': widget.currentuser.uid,
                       });
                       final userref = storaferef.child(MyAuth().uid);
                       final fileref = userref.child(widget.current!.id);
                       await fileref.putFile(File(widget.image.path));
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => member_home(MyAuth().myuser)));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => member_home(widget.currentuser)));
                     } on FirebaseException catch (e) {
                       print("Uploading Error");
                       showToast(e.message ?? "Unknown Error");

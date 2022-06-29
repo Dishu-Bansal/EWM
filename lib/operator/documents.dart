@@ -28,7 +28,7 @@ class _MyDocumentsState extends State<MyDocuments> {
     await FirebaseFirestore.instance.collection("files").where('shared_with', arrayContainsAny: [id]).get().then((value)
     {
       value.docs.forEach((e) {
-        files.add(MyFiles(e.id, e["name"], e["shared_by"], e["shared_with"], e["time"], e["sharer"]));
+        files.add(MyFiles(e.id, e["name"], e["shared_by"], e["shared_with"], e["time"], e["sharer"], e["seen"]));
       });
     });
     setState(() {
@@ -45,7 +45,7 @@ class _MyDocumentsState extends State<MyDocuments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: loading ? Center(child: CircularProgressIndicator(),) : Row(
         children: [
           Expanded(
@@ -62,8 +62,8 @@ class _MyDocumentsState extends State<MyDocuments> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Flexible(fit: FlexFit.loose,child: Text(current.name, overflow: TextOverflow.fade,)),
-                              Flexible(fit: FlexFit.loose,child: Text(current.sharer, overflow: TextOverflow.fade,)),
+                              Flexible(fit: FlexFit.loose,child: Text(current.name, overflow: TextOverflow.fade, style: TextStyle(fontWeight: current.seen ? FontWeight.normal : FontWeight.bold),)),
+                              Flexible(fit: FlexFit.loose,child: Text(current.sharer, overflow: TextOverflow.fade, style: TextStyle(fontWeight: current.seen ? FontWeight.normal : FontWeight.bold),)),
                               Flexible(fit: FlexFit.loose,child: Text(DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(current.time)), overflow: TextOverflow.fade,)),
                               IconButton(
                                   onPressed: () async {
@@ -74,6 +74,7 @@ class _MyDocumentsState extends State<MyDocuments> {
                                     File file = File(dir!.path +"/"+ current.name);
 
                                     try {
+                                      showToast("Downloading file..");
                                       final downloadTask = islandRef.writeToFile(file);
                                       downloadTask.snapshotEvents.listen((taskSnapshot) {
                                         switch (taskSnapshot.state) {
@@ -114,6 +115,7 @@ class _MyDocumentsState extends State<MyDocuments> {
                                     File file = File(dir!.path +"/"+ current.name);
 
                                     try {
+                                      showToast("Starting Download...");
                                       final downloadTask = islandRef.writeToFile(file);
                                       downloadTask.snapshotEvents.listen((taskSnapshot) {
                                         switch (taskSnapshot.state) {
@@ -125,6 +127,7 @@ class _MyDocumentsState extends State<MyDocuments> {
                                             break;
                                           case TaskState.success:
                                           // TODO: Handle this case.
+                                            showToast("Download Complete!");
                                             FirebaseFirestore.instance.collection("files").doc(current.id).set(
                                                 {
                                                   'seen' : true,

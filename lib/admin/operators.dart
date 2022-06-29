@@ -19,7 +19,7 @@ class _OperatorsState extends State<Operators> {
   List<MyUsers> operator = List.empty(growable: true);
   bool loading = true;
   getOperators() async {
-    operator = await getUsers("access", "Operator");
+    operator = await getUsers("access", "Operator", "");
     setState(() {
       loading = false;
     });
@@ -34,7 +34,7 @@ class _OperatorsState extends State<Operators> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: loading? Center(child: CircularProgressIndicator(),) : Row(
         children: [
           Expanded(

@@ -32,6 +32,8 @@
     <string>Required to capture photos of tickets</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Required to access camera</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Required to save tickets or documents</string>
     <key>LSSupportsOpeningDocumentsInPlace</key>
     <true/>
     <key>UIFileSharingEnabled</key>

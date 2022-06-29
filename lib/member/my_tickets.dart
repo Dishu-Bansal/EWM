@@ -49,7 +49,7 @@ class _MyTicketsState extends State<MyTickets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: createAppBar(context),
+      appBar: createAppBar(context, true, true),
       body: loading ? Center(child: CircularProgressIndicator(),) : Row(
         children: [
           Expanded(
@@ -60,6 +60,10 @@ class _MyTicketsState extends State<MyTickets> {
                   children: [
                     Expanded(child: Center(child: Text("Tickets"),),),
                     Expanded(child: Center(child: Text("Expiration"),),),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0,0,6,0),
+                      child: Text("Replace"),
+                    )
                   ],
                 ),
                 Expanded(
@@ -73,9 +77,9 @@ class _MyTicketsState extends State<MyTickets> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(child: Center(child: Text(current.name))),
-                              Expanded(child: Center(child: Text(DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(current.end)), style: TextStyle(color: current.end <  DateTime.now().millisecondsSinceEpoch ? Colors.red : (DateTime.now().millisecondsSinceEpoch + Duration(days: 60).inMilliseconds > current.end ? Colors.yellow : Colors.black)),))),
+                              Expanded(child: Center(child: Text( current.end == 0 ? "No Expiry" : DateFormat("dd/MM/yyyy").format(DateTime.fromMillisecondsSinceEpoch(current.end)), style: TextStyle(color: current.end == 0 ? Colors.black : (current.end <  DateTime.now().millisecondsSinceEpoch ? Colors.red : (DateTime.now().millisecondsSinceEpoch + Duration(days: 60).inMilliseconds > current.end ? Colors.yellow : Colors.green))),))),
                               IconButton(onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => picture(current)));
+                                Navigator.of(context).push(MaterialPageRoute(builder: (_) => picture(current, widget.current)));
                               }, icon: Icon(Icons.restore_sharp, color: Colors.black,))
                             ],
                           ),
@@ -87,7 +91,7 @@ class _MyTicketsState extends State<MyTickets> {
                     Expanded(
                       child: MaterialButton(
                         onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => picture(null)));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => picture(null, widget.current)));
                           setState(() {
                             getTickets();
                           });
